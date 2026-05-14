@@ -14,6 +14,7 @@ from ..errors import ApiCallFailed, NotFound, ValidationError
 from ..output import emit, resolve_format
 from ..resolve import ResolveClient
 from ..timecode import frame_to_timecode, parse_timecode
+from ..wi_client import WIBridge, default_bridge
 from . import _client as client_mod
 
 app = typer.Typer(help="Timeline management and marker operations.")
@@ -200,6 +201,72 @@ def delete_marker(
     return {"ok": True, "frame": frame, "timecode": at}
 
 
+def cut_at(
+    client: ResolveClient,
+    *,
+    at: str,
+    timeline_name: Optional[str] = None,
+    dry_run: bool = False,
+    bridge: Optional[WIBridge] = None,
+) -> dict[str, Any]:
+    """Cut the timeline at a given timecode.
+
+    DaVinciResolveScript Python API has no razor-cut primitive, so we delegate
+    to the WI plugin. The v0.2 WI implementation drops a marker as a cut
+    proposal — true SplitClip is queued for v0.3 (see CHANGELOG).
+    """
+    proj = _current_project_or_raise(client)
+    tl = _resolve_target_timeline(proj, timeline_name)
+    fps = _fps_of(tl)
+    frame = parse_timecode(at, fps)
+    if dry_run:
+        return {
+            "dryRun": True,
+            "planned": [
+                {"action": "timeline.cut", "frame": frame, "timecode": at, "via": "workflow_integrations"}
+            ],
+        }
+    out = (bridge or default_bridge()).call("timeline.cut", {"at": at})
+    if isinstance(out, dict):
+        return {"ok": True, "frame": frame, "timecode": at, **out}
+    return {"ok": True, "frame": frame, "timecode": at}
+
+
+def move_clip(
+    client: ResolveClient,
+    *,
+    clip_id: str,
+    to: str,
+    timeline_name: Optional[str] = None,
+    dry_run: bool = False,
+    bridge: Optional[WIBridge] = None,
+) -> dict[str, Any]:
+    """Move a clip within a timeline to a new start timecode.
+
+    Same caveat as `cut_at`: delegated to WI; v0.2 returns the WI plugin's
+    structured "deferred" payload while we wait for an API surface to land.
+    """
+    proj = _current_project_or_raise(client)
+    tl = _resolve_target_timeline(proj, timeline_name)
+    fps = _fps_of(tl)
+    frame = parse_timecode(to, fps)
+    if dry_run:
+        return {
+            "dryRun": True,
+            "planned": [
+                {
+                    "action": "timeline.move",
+                    "clipId": clip_id,
+                    "to": to,
+                    "frame": frame,
+                    "via": "workflow_integrations",
+                }
+            ],
+        }
+    out = (bridge or default_bridge()).call("timeline.move", {"clipId": clip_id, "to": to})
+    return {"ok": True, "clipId": clip_id, "frame": frame, "timecode": to, **(out if isinstance(out, dict) else {})}
+
+
 def list_markers(
     client: ResolveClient, timeline_name: Optional[str] = None
 ) -> list[dict[str, Any]]:
@@ -308,3 +375,32 @@ def cli_marker_list(
 ) -> None:
     """List markers on a timeline."""
     emit(list_markers(client_mod.get(), timeline_name=timeline), resolve_format(fmt))
+
+
+@app.command("cut")
+def cli_cut(
+    at: str = typer.Option(..., "--at", help="Timecode HH:MM:SS:FF"),
+    timeline: Optional[str] = typer.Option(None, "--timeline", "-t"),
+    dry_run: bool = typer.Option(False, "--dry-run"),
+    fmt: Optional[str] = typer.Option(None, "--format", "-f"),
+) -> None:
+    """Cut the timeline at <TC>. Requires the WI plugin (run `dvr install-wi` first)."""
+    emit(
+        cut_at(client_mod.get(), at=at, timeline_name=timeline, dry_run=dry_run),
+        resolve_format(fmt),
+    )
+
+
+@app.command("move")
+def cli_move(
+    clip_id: str = typer.Option(..., "--clip", help="Clip id (from `dvr timeline clips`)"),
+    to: str = typer.Option(..., "--to", help="Target start timecode HH:MM:SS:FF"),
+    timeline: Optional[str] = typer.Option(None, "--timeline", "-t"),
+    dry_run: bool = typer.Option(False, "--dry-run"),
+    fmt: Optional[str] = typer.Option(None, "--format", "-f"),
+) -> None:
+    """Move a clip within the timeline. Requires the WI plugin."""
+    emit(
+        move_clip(client_mod.get(), clip_id=clip_id, to=to, timeline_name=timeline, dry_run=dry_run),
+        resolve_format(fmt),
+    )

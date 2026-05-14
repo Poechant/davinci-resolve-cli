@@ -10,6 +10,8 @@ import typer
 
 from . import __version__
 from .commands import doctor as doctor_cmd
+from .commands import install_wi as install_wi_cmd
+from .commands import mcp_cmd
 from .commands import media as media_cmd
 from .commands import project as project_cmd
 from .commands import render as render_cmd
@@ -28,6 +30,8 @@ app.add_typer(project_cmd.app, name="project")
 app.add_typer(media_cmd.app, name="media")
 app.add_typer(render_cmd.app, name="render")
 app.add_typer(timeline_cmd.app, name="timeline")
+app.add_typer(mcp_cmd.app, name="mcp")
+app.add_typer(install_wi_cmd.app, name="install-wi")
 
 
 def _version_callback(value: bool) -> None:

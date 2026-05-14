@@ -82,3 +82,24 @@ class NotFound(DvrError):
             hint=f"Use `dvr {kind.lower()} list` to see available items.",
             exit_code=1,
         )
+
+
+class WIUnavailable(DvrError):
+    def __init__(self, reason: str = "no response within timeout") -> None:
+        super().__init__(
+            error_code="wi_unavailable",
+            message=f"Workflow Integration bridge is not reachable: {reason}",
+            hint="Run `dvr install-wi` and ensure DaVinci Resolve Studio is running with "
+            "the dvr-cli-bridge plugin loaded (Workspace → Workflow Integrations).",
+            exit_code=2,
+        )
+
+
+class WIError(DvrError):
+    def __init__(self, message: str, hint: Optional[str] = None) -> None:
+        super().__init__(
+            error_code="wi_error",
+            message=f"Workflow Integration bridge reported error: {message}",
+            hint=hint,
+            exit_code=3,
+        )

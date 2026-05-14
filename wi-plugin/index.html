@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>DVR CLI Bridge</title>
+  <style>
+    body {
+      font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+      background: #1c1c1c;
+      color: #e6e6e6;
+      margin: 0;
+      padding: 24px;
+    }
+    h1 { font-size: 16px; margin: 0 0 12px; }
+    .dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      vertical-align: middle;
+      margin-right: 8px;
+      background: #888;
+    }
+    .dot.live   { background: #36c;  box-shadow: 0 0 6px #36c; }
+    .dot.idle   { background: #888; }
+    .dot.error  { background: #d33; }
+    #status { color: #aaa; font-size: 12px; }
+    #log {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      color: #888;
+      margin-top: 16px;
+      max-height: 240px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1><span id="dot" class="dot idle"></span>DVR CLI Bridge</h1>
+  <div id="status">Polling localhost:50420 for tasks…</div>
+  <pre id="log"></pre>
+  <script src="server.js"></script>
+</body>
+</html>

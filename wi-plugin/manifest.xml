@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WorkflowIntegration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Identifier>com.poechant.davinci-resolve-cli</Identifier>
+  <Name>DVR CLI Bridge</Name>
+  <Description>Bridges davinci-resolve-cli (`dvr`) operations that require Resolve JS API access (e.g. timeline cut/move). Polls a localhost HTTP server started by the CLI for tasks and executes them via WorkflowIntegration.GetResolve().</Description>
+  <Type>local</Type>
+  <Version>0.2.0</Version>
+  <Author>davinci-resolve-cli</Author>
+</WorkflowIntegration>

@@ -1,0 +1,43 @@
+name: test
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    name: ${{ matrix.os }} / py${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ["3.9", "3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Run unit tests
+        run: pytest -ra -m "not integration"
+
+      - name: Run dvr doctor (sanity)
+        if: ${{ runner.os != 'Windows' }}
+        run: dvr doctor --format json || true   # Resolve isn't on CI runners; exit 2 is expected
+
+      - name: Run dvr doctor (Windows)
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          dvr doctor --format json
+          if ($LASTEXITCODE -ne 0 -and $LASTEXITCODE -ne 2) { exit $LASTEXITCODE }
+        shell: pwsh
