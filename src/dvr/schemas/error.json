@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://davinci-resolve-cli/schemas/error.json",
+  "title": "DvrError",
+  "type": "object",
+  "required": ["errorCode", "message"],
+  "additionalProperties": false,
+  "properties": {
+    "errorCode": {
+      "type": "string",
+      "enum": [
+        "resolve_not_running",
+        "version_unsupported",
+        "api_unavailable",
+        "api_call_failed",
+        "validation_error",
+        "not_found"
+      ]
+    },
+    "message": { "type": "string" },
+    "hint": { "type": "string" }
+  }
+}

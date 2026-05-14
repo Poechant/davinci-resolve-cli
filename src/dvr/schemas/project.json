@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://davinci-resolve-cli/schemas/project.json",
+  "title": "ProjectSchemas",
+  "$defs": {
+    "ProjectSummary": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "index": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "ProjectList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "index": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "ProjectCurrent": {
+      "type": "object",
+      "required": ["name", "timelineCount", "framerate", "resolution"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "timelineCount": { "type": "integer", "minimum": 0 },
+        "framerate": { "type": "number" },
+        "resolution": {
+          "type": "object",
+          "required": ["width", "height"],
+          "additionalProperties": false,
+          "properties": {
+            "width": { "type": "integer", "minimum": 1 },
+            "height": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    },
+    "ProjectMutationResult": {
+      "type": "object",
+      "required": ["ok"],
+      "additionalProperties": true,
+      "properties": {
+        "ok": { "type": "boolean" },
+        "name": { "type": "string" },
+        "path": { "type": "string" }
+      }
+    }
+  }
+}

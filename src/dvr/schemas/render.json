@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://davinci-resolve-cli/schemas/render.json",
+  "title": "RenderSchemas",
+  "$defs": {
+    "JobStatus": {
+      "type": "string",
+      "enum": ["queued", "rendering", "completed", "failed", "cancelled"]
+    },
+    "JobRecord": {
+      "type": "object",
+      "required": ["jobId", "status", "submittedAt"],
+      "additionalProperties": false,
+      "properties": {
+        "jobId": { "type": "string" },
+        "project": { "type": "string" },
+        "timeline": { "type": "string" },
+        "preset": { "type": "string" },
+        "output": { "type": "string" },
+        "submittedAt": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["queued", "rendering", "completed", "failed", "cancelled"]
+        },
+        "progress": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "extra": { "type": "object" }
+      }
+    },
+    "JobList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["jobId", "status"],
+        "additionalProperties": true,
+        "properties": {
+          "jobId": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["queued", "rendering", "completed", "failed", "cancelled"]
+          },
+          "progress": { "type": "integer" }
+        }
+      }
+    },
+    "SubmitResult": {
+      "type": "object",
+      "required": ["jobId", "status", "submittedAt"],
+      "additionalProperties": false,
+      "properties": {
+        "jobId": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["queued", "rendering"]
+        },
+        "submittedAt": { "type": "string" },
+        "preset": { "type": "string" },
+        "timeline": { "type": "string" },
+        "output": { "type": "string" }
+      }
+    },
+    "StatusResult": {
+      "type": "object",
+      "required": ["jobId", "status"],
+      "additionalProperties": true,
+      "properties": {
+        "jobId": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["queued", "rendering", "completed", "failed", "cancelled"]
+        },
+        "progress": { "type": "integer", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "PresetList": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

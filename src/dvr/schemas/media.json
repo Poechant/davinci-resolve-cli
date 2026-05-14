@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://davinci-resolve-cli/schemas/media.json",
+  "title": "MediaSchemas",
+  "$defs": {
+    "Clip": {
+      "type": "object",
+      "required": ["id", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "resolution": { "type": ["string", "null"] },
+        "duration": { "type": ["string", "null"] },
+        "codec": { "type": ["string", "null"] },
+        "fps": { "type": ["string", "null"] },
+        "type": { "type": ["string", "null"] },
+        "flags": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "ClipList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "resolution": { "type": ["string", "null"] },
+          "duration": { "type": ["string", "null"] },
+          "codec": { "type": ["string", "null"] },
+          "fps": { "type": ["string", "null"] },
+          "type": { "type": ["string", "null"] },
+          "flags": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "ImportResult": {
+      "type": "object",
+      "required": ["imported", "failed"],
+      "additionalProperties": false,
+      "properties": {
+        "imported": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "path"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "path": { "type": "string" }
+            }
+          }
+        },
+        "failed": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path", "reason"],
+            "additionalProperties": false,
+            "properties": {
+              "path": { "type": "string" },
+              "reason": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "TagResult": {
+      "type": "object",
+      "required": ["tagged", "failed"],
+      "additionalProperties": false,
+      "properties": {
+        "tagged": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "failed": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["clipId", "reason"],
+            "additionalProperties": false,
+            "properties": {
+              "clipId": { "type": "string" },
+              "reason": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://davinci-resolve-cli/schemas/doctor.json",
+  "title": "DoctorReport",
+  "type": "object",
+  "required": ["resolveRunning", "bridgeStatus", "issues"],
+  "additionalProperties": false,
+  "properties": {
+    "resolveRunning": { "type": "boolean" },
+    "version": { "type": ["string", "null"] },
+    "edition": {
+      "type": ["string", "null"],
+      "enum": ["Studio", "Free", null]
+    },
+    "apiPath": { "type": ["string", "null"] },
+    "libPath": { "type": ["string", "null"] },
+    "bridgeStatus": {
+      "type": "string",
+      "enum": ["ok", "module_not_found", "connect_failed", "version_unsupported"]
+    },
+    "cliVersion": { "type": "string" },
+    "platform": { "type": "string" },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "message"],
+        "additionalProperties": false,
+        "properties": {
+          "code": { "type": "string" },
+          "message": { "type": "string" },
+          "hint": { "type": "string" }
+        }
+      }
+    }
+  }
+}

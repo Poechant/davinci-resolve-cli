@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://davinci-resolve-cli/schemas/timeline.json",
+  "title": "TimelineSchemas",
+  "$defs": {
+    "TimelineSummary": {
+      "type": "object",
+      "required": ["name", "fps"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "fps": { "type": "number" },
+        "index": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "TimelineList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "fps"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "fps": { "type": "number" },
+          "index": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "ClipsInTimeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["trackType", "trackIndex", "start", "end", "frames"],
+        "additionalProperties": false,
+        "properties": {
+          "trackType": { "type": "string", "enum": ["video", "audio", "subtitle"] },
+          "trackIndex": { "type": "integer", "minimum": 1 },
+          "name": { "type": "string" },
+          "start": { "type": "string" },
+          "end": { "type": "string" },
+          "frames": {
+            "type": "object",
+            "required": ["start", "end"],
+            "additionalProperties": false,
+            "properties": {
+              "start": { "type": "integer" },
+              "end": { "type": "integer" }
+            }
+          },
+          "source": {
+            "type": ["object", "null"],
+            "required": ["id", "name"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "MarkerAction": {
+      "type": "object",
+      "required": ["ok"],
+      "additionalProperties": false,
+      "properties": {
+        "ok": { "type": "boolean" },
+        "frame": { "type": "integer" },
+        "timecode": { "type": "string" }
+      }
+    },
+    "DryRun": {
+      "type": "object",
+      "required": ["dryRun", "planned"],
+      "additionalProperties": false,
+      "properties": {
+        "dryRun": { "const": true },
+        "planned": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["action"],
+            "additionalProperties": true,
+            "properties": {
+              "action": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
