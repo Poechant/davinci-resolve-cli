@@ -1,3 +1,5 @@
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/86fa31b1-9229-484a-9ce8-6314d4015340" />
+
 # davinci-resolve-cli (`dvr`)
 
 A CLI for DaVinci Resolve 18+ — project / media / render / timeline control for humans and AI agents.
