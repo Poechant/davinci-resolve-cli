@@ -4,6 +4,17 @@ All notable changes to this project will be documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project adheres to [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.3] - 2026-05-16
+
+### Added
+- **README "Capabilities at a glance" table** — single reference matrix of all
+  seven command domains, every subcommand, and the cross-cutting conventions
+  (`--format`, structured errors, `--dry-run`, exit codes). Sits between
+  Quickstart and Output formats so new visitors can judge fit in 5 seconds
+  without scrolling through the Cookbook.
+
+No code or behavior changes; doc-only patch.
+
 ## [0.2.2] - 2026-05-16
 
 ### Added

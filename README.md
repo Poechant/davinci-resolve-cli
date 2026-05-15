@@ -38,6 +38,25 @@ dvr render wait "$JOB"
 dvr timeline marker add --at 01:00:05:00 --note "review"
 ```
 
+## Capabilities at a glance
+
+| Domain | Subcommands | What it does |
+|--------|-------------|--------------|
+| `doctor` | — | Diagnose the Resolve bridge environment (version, Studio / Free, API path, issues) |
+| `project` | `list / current / open / new / close / save / export / import` | Project library CRUD |
+| `media` | `import / list / tag` | Media-pool batch ops — recursive import, per-bin lookup, 16 named flag colors, partial-failure reporting |
+| `render` | `presets / submit / status / list / wait / cancel` | Async render queue. `submit` returns a `jobId` immediately; `wait` blocks until terminal (`completed` / `failed` / `cancelled`) |
+| `timeline` | `list / current / open / new / delete / clips / cut / move`<br>`marker add / delete / list` | Timeline CRUD + marker ops + WI-bridged razor cut and clip move |
+| `mcp` | — | Start a stdio MCP server exposing 20 tools (one per CLI verb), each with a JSON-Schema'd `inputSchema` |
+| `install-wi` | `--uninstall / --force` | Deploy / remove the Workflow Integration plugin used by `timeline cut` and `timeline move` |
+
+Conventions across every command:
+
+- `--format json|yaml|table` — JSON by default in non-TTY, `table` (rich) in TTY, override via `DVR_OUTPUT`
+- Structured errors on stderr — `{"errorCode", "message", "hint"}`, stable codes (`resolve_not_running`, `validation_error`, `not_found`, `api_call_failed`, `wi_unavailable`, …)
+- `--dry-run` on every mutating command — prints the `planned` actions without touching Resolve
+- Exit codes: `0` ok, `1` user error, `2` Resolve unavailable, `3` API call failed
+
 ## Output formats
 
 | context | default |
