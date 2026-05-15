@@ -118,6 +118,21 @@ class FakeMediaPool:
         self._current._clips.extend(items)
         return items
 
+    def DeleteTimelines(self, timelines: list) -> bool:
+        owner = getattr(self, "_owner", None)
+        if owner is None:
+            return False
+        removed = False
+        for tl in timelines:
+            if tl in owner._timelines:
+                owner._timelines.remove(tl)
+                if owner._current_timeline is tl:
+                    owner._current_timeline = (
+                        owner._timelines[-1] if owner._timelines else None
+                    )
+                removed = True
+        return removed
+
     def CreateEmptyTimeline(self, name: str) -> "FakeTimeline":  # forward-ref ok
         fps = 24.0
         owner = getattr(self, "_owner", None)

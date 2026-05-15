@@ -4,6 +4,19 @@ All notable changes to this project will be documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project adheres to [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] - 2026-05-16
+
+### Added
+- **`dvr timeline delete <name>`** — delete a timeline by name. Supports `--dry-run`.
+  Auto-promotes another timeline to "current" if the deleted one was active.
+- **README Cookbook** — five copy-paste end-to-end recipes covering render,
+  batch import per date, bulk tag, CSV-driven markers, and MCP-agent dispatch.
+
+### Tests
+- 6 new unit tests covering `timeline delete` happy path, missing name, empty
+  name, dry-run, current-timeline promotion, and last-timeline removal.
+- 184 unit tests total (was 178).
+
 ## [0.2.1] - 2026-05-16
 
 ### Fixed

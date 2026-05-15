@@ -78,6 +78,33 @@ def open_timeline(client: ResolveClient, name: str) -> dict[str, Any]:
     raise NotFound("Timeline", name)
 
 
+def delete_timeline(
+    client: ResolveClient,
+    name: str,
+    *,
+    dry_run: bool = False,
+) -> dict[str, Any]:
+    """Delete a timeline by name. Resolves to a MediaPool.DeleteTimelines() call."""
+    if not name.strip():
+        raise ValidationError("timeline name must not be empty")
+    proj = _current_project_or_raise(client)
+    count = int(proj.GetTimelineCount() or 0)
+    target = None
+    for i in range(1, count + 1):
+        tl = proj.GetTimelineByIndex(i)
+        if tl is not None and tl.GetName() == name:
+            target = tl
+            break
+    if target is None:
+        raise NotFound("Timeline", name)
+    if dry_run:
+        return {"dryRun": True, "planned": [{"action": "timeline.delete", "name": name}]}
+    mp = proj.GetMediaPool()
+    if not mp.DeleteTimelines([target]):
+        raise ApiCallFailed("DeleteTimelines", name)
+    return {"ok": True, "name": name}
+
+
 def new_timeline(
     client: ResolveClient, name: str, *, fps: Optional[float] = None
 ) -> dict[str, Any]:
@@ -318,6 +345,16 @@ def cli_new(
 ) -> None:
     """Create a new empty timeline."""
     emit(new_timeline(client_mod.get(), name, fps=fps), resolve_format(fmt))
+
+
+@app.command("delete")
+def cli_delete(
+    name: str,
+    dry_run: bool = typer.Option(False, "--dry-run"),
+    fmt: Optional[str] = typer.Option(None, "--format", "-f"),
+) -> None:
+    """Delete a timeline by name."""
+    emit(delete_timeline(client_mod.get(), name, dry_run=dry_run), resolve_format(fmt))
 
 
 @app.command("clips")

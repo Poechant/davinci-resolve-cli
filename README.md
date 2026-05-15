@@ -99,6 +99,73 @@ dvr mcp   # blocks, reads stdin/writes stdout per MCP spec
 | 18.x Free   | ⚠️ partial (render encoders limited) |
 | 17.x or older | ❌ unsupported |
 
+## Cookbook
+
+Five end-to-end recipes covering the most common workflows. Each is a copy-paste shell snippet that assumes DaVinci Resolve 18+ Studio is running and a project is open.
+
+### 1. Render the current timeline as 1080p H.264 mp4
+
+```bash
+# Preflight: make sure the bridge is healthy
+dvr doctor --format json | jq -e '.bridgeStatus == "ok"' >/dev/null || { echo "Resolve not ready"; exit 2; }
+
+# Pick the first preset whose name contains "H.264"
+PRESET=$(dvr render presets --format json | jq -r '.[] | select(test("H\\.264"; "i"))' | head -1)
+
+# Submit (async — returns immediately), then block until done
+JOB=$(dvr render submit --preset "$PRESET" --timeline cur --output ~/Renders/out.mp4 --start --format json | jq -r .jobId)
+dvr render wait "$JOB"   # progress to stderr, terminal status to stdout
+```
+
+### 2. Import a SD card's footage into per-date bins
+
+```bash
+# Assumes ~/footage/<YYYY-MM-DD>/ structure
+for day_dir in ~/footage/*/; do
+  day=$(basename "$day_dir")
+  dvr media import "$day_dir" --bin "$day" --recursive --format json | jq '.imported | length' \
+    | xargs -I{} echo "imported {} clips into '$day'"
+done
+```
+
+### 3. Tag every clip in a bin as "Green" for review (skipping ones already tagged)
+
+```bash
+BIN="Day1"
+IDS=$(dvr media list --bin "$BIN" --format json \
+  | jq -r '.[] | select(.flags | index("Green") | not) | .id')
+[ -n "$IDS" ] && dvr media tag $IDS --color Green --format json
+```
+
+### 4. Drop chapter markers from a CSV file (timecode, label)
+
+```bash
+# chapters.csv:
+#   00:00:00:00,intro
+#   00:01:30:00,demo
+#   00:04:15:00,outro
+while IFS=, read -r tc label; do
+  dvr timeline marker add --at "$tc" --name "$label" --color Sky --format json >/dev/null
+done < chapters.csv
+
+dvr timeline marker list --format json | jq '.[] | "\(.timecode) → \(.name)"'
+```
+
+### 5. AI agent: render via MCP server
+
+Wire `dvr mcp` into any MCP-aware client (most desktop AI assistants now support MCP — check your client's docs for the right config file path):
+
+```jsonc
+// ~/.config/<client>/mcp.json
+{ "mcpServers": { "davinci-resolve": { "command": "dvr", "args": ["mcp"] } } }
+```
+
+Then ask the agent:
+
+> "Render the currently open timeline as 1080p H.264, save it to ~/out.mp4, and tell me when it's done."
+
+The agent will call `doctor` → `render.presets` → `render.submit(start=true)` → `render.wait` automatically. Tool errors come back as structured `{errorCode, message, hint}` so the agent can branch on `resolve_not_running` / `validation_error` / etc. deterministically.
+
 ## Development
 
 ```bash
