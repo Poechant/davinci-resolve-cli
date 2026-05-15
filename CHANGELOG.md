@@ -4,7 +4,20 @@ All notable changes to this project will be documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project adheres to [SemVer](https://semver.org/spec/v2.0.0.html).
 
-## [0.2.0] - 2026-05-15
+## [0.2.1] - 2026-05-16
+
+### Fixed
+- **Drop Python 3.9 support.** The `mcp` runtime dependency (introduced for the
+  `dvr mcp` server in v0.2.0) requires Python 3.10+, so `pipx install` on a 3.9
+  interpreter failed with `No matching distribution found for mcp>=1.0`.
+  `requires-python` is now `>=3.10`; classifiers, ruff target, and the CI
+  matrix have been aligned. v0.2.0 has been yanked from PyPI.
+- Cross-platform test fixtures: `FakeMediaPool.ImportMedia` /
+  `FakeProjectManager.ImportProject` and `tests/unit/test_bootstrap_cross_platform.py`
+  no longer assume POSIX path separators, fixing 5 spurious Windows-only CI
+  failures. Production code unchanged.
+
+## [0.2.0] - 2026-05-15 (yanked — install with Python 3.10+)
 
 ### Added
 - **PyPI distribution** — `pipx install davinci-resolve-cli` now works directly from PyPI; OIDC Trusted Publishing via GitHub Actions (`.github/workflows/publish.yml`).

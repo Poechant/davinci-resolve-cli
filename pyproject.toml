@@ -4,10 +4,10 @@ build-backend = "hatchling.build"
 
 [project]
 name = "davinci-resolve-cli"
-version = "0.2.0"
+version = "0.2.1"
 description = "A CLI for DaVinci Resolve 18+ — project, media, render, and timeline control for humans and AI agents."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "钟超", email = "zhongchao.ustc@gmail.com" }]
 keywords = ["davinci-resolve", "cli", "video-editing", "ai-agent"]
@@ -21,7 +21,6 @@ classifiers = [
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -66,7 +65,7 @@ addopts = "-ra -m 'not integration'"
 
 [tool.ruff]
 line-length = 100
-target-version = "py39"
+target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP"]
