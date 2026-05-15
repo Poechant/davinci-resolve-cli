@@ -6,6 +6,7 @@ It is intentionally **not** exhaustive — subsequent tasks (T2-T5) extend it.
 """
 from __future__ import annotations
 
+import os
 from typing import Any, Optional
 
 import pytest
@@ -109,7 +110,11 @@ class FakeMediaPool:
         return sub
 
     def ImportMedia(self, paths: list[str]) -> list[FakeMediaPoolItem]:
-        items = [FakeMediaPoolItem(p.split("/")[-1], {"File Path": p}) for p in paths]
+        # `os.path.basename` honors the host OS separator (Win = `\`, POSIX = `/`).
+        items = [
+            FakeMediaPoolItem(os.path.basename(p) or p, {"File Path": p})
+            for p in paths
+        ]
         self._current._clips.extend(items)
         return items
 
@@ -353,7 +358,8 @@ class FakeProjectManager:
         return project_name in self._projects
 
     def ImportProject(self, path: str) -> bool:
-        name = path.split("/")[-1].rsplit(".", 1)[0]
+        # Strip directory (any platform separator) and extension.
+        name = os.path.splitext(os.path.basename(path))[0] or path
         if name in self._projects:
             return False
         self._projects[name] = FakeProject(name)
