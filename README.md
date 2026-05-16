@@ -4,10 +4,50 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/davinci-resolve-cli.svg)](https://pypi.org/project/davinci-resolve-cli/)
 [![Python versions](https://img.shields.io/pypi/pyversions/davinci-resolve-cli.svg)](https://pypi.org/project/davinci-resolve-cli/)
+[![Downloads](https://img.shields.io/pypi/dm/davinci-resolve-cli.svg)](https://pypi.org/project/davinci-resolve-cli/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Build](https://github.com/Poechant/davinci-resolve-cli/actions/workflows/build.yml/badge.svg)](https://github.com/Poechant/davinci-resolve-cli/actions/workflows/build.yml)
+[![Tests](https://github.com/Poechant/davinci-resolve-cli/actions/workflows/test.yml/badge.svg)](https://github.com/Poechant/davinci-resolve-cli/actions/workflows/test.yml)
 
 A CLI for DaVinci Resolve 18+ — project / media / render / timeline control for humans and AI agents.
+
+## Demo
+
+![demo](docs/demo.gif)
+
+<details>
+<summary>What the commands above output (text snapshot)</summary>
+
+```console
+$ dvr doctor --format json | jq '{version, edition, bridgeStatus}'
+{
+  "version": "19.1.4.11",
+  "edition": "Studio",
+  "bridgeStatus": "ok"
+}
+
+$ dvr project current --format json
+{
+  "name": "Untitled Project",
+  "timelineCount": 1,
+  "framerate": 24.0,
+  "resolution": { "width": 3840, "height": 2160 }
+}
+
+$ dvr render presets --format json | head -3
+[
+  "H.264 Master",
+  "ProRes 422 HQ"
+
+$ dvr timeline marker add --at 00:00:01:00 --note "review" --color Green --format json
+{ "ok": true, "frame": 24, "timecode": "00:00:01:00" }
+
+$ dvr mcp   # ← then any MCP client (stdio) can call 20 tools
+```
+
+> The GIF above is generated from `docs/demo.tape` with [vhs](https://github.com/charmbracelet/vhs) (`brew install vhs && vhs docs/demo.tape`). Re-run after major UX changes.
+
+</details>
 
 ## Install
 

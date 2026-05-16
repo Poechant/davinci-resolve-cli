@@ -4,6 +4,24 @@ All notable changes to this project will be documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project adheres to [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.4] - 2026-05-16
+
+### Added
+- **`AGENTS.md`** — contributor-facing guide for AI coding agents (Cursor /
+  Codex / Aider / Continue / …) helping with PRs. Encodes the TDD rules,
+  pure-function-+-thin-Typer split, error model, dry-run requirement, MCP
+  registry mirroring, cross-platform constraints, and the "don't touch
+  without discussion" list.
+- **README Demo section** — text snapshot of five canonical commands +
+  inline `vhs` recipe for generating `docs/demo.gif` (`brew install vhs && vhs docs/demo.tape`).
+  GIF placeholder embedded; drop the rendered file in `docs/demo.gif` and it
+  shows up.
+- **`docs/demo.tape`** — vhs script that produces a < 2 MB demo gif from a
+  fresh terminal in ~10 seconds.
+- **Two new README badges** — Tests workflow status + monthly PyPI downloads.
+
+No code or behavior changes; documentation + contributor tooling only.
+
 ## [0.2.3] - 2026-05-16
 
 ### Added
