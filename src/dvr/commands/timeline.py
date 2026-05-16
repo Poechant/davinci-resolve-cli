@@ -167,6 +167,20 @@ def list_clips_in_timeline(
     return out
 
 
+def _timeline_has_any_clip(tl) -> bool:
+    """Heuristic: does the timeline have at least one clip on any track?"""
+    for track_type in ("video", "audio", "subtitle"):
+        try:
+            track_count = int(tl.GetTrackCount(track_type) or 0)
+        except Exception:  # noqa: BLE001
+            track_count = 0
+        for idx in range(1, track_count + 1):
+            items = tl.GetItemListInTrack(track_type, idx) or []
+            if items:
+                return True
+    return False
+
+
 def add_marker(
     client: ResolveClient,
     *,
@@ -203,7 +217,27 @@ def add_marker(
             ],
         }
     if not tl.AddMarker(frame, color, name, note, duration):
-        raise ApiCallFailed("AddMarker", at)
+        # Resolve's AddMarker returns False with no diagnostics. Try to give
+        # an actionable hint by checking the most common precondition — a
+        # marker has nothing to anchor to on a timeline with zero clips.
+        if not _timeline_has_any_clip(tl):
+            raise ApiCallFailed(
+                "AddMarker",
+                at,
+                hint=(
+                    f"Timeline '{tl.GetName()}' has no clips. Resolve markers must anchor to a clip — "
+                    "import or append at least one clip before placing a marker. "
+                    "If the timeline does have clips, the frame may be outside their range."
+                ),
+            )
+        raise ApiCallFailed(
+            "AddMarker",
+            at,
+            hint=(
+                "AddMarker returned false. Common causes: marker already exists at this frame, "
+                "frame outside the timeline's clip range, or the color string is misspelled."
+            ),
+        )
     return {"ok": True, "frame": frame, "timecode": at}
 
 

@@ -13,3 +13,9 @@ build/
 venv/
 .env
 .DS_Store
+
+# AI-tool local config (do not commit — keep repo vendor-neutral)
+.claude/
+.cursor/
+.aider*
+.continuerc

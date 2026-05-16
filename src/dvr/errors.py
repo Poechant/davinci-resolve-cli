@@ -54,12 +54,22 @@ class ApiUnavailable(DvrError):
 
 
 class ApiCallFailed(DvrError):
-    def __init__(self, op: str, detail: Optional[str] = None) -> None:
+    DEFAULT_HINT = (
+        "The API returned False/None. Confirm preconditions (project open, "
+        "timeline selected, file path valid)."
+    )
+
+    def __init__(
+        self,
+        op: str,
+        detail: Optional[str] = None,
+        *,
+        hint: Optional[str] = None,
+    ) -> None:
         super().__init__(
             error_code="api_call_failed",
             message=f"DaVinci Resolve API call failed: {op}" + (f" ({detail})" if detail else ""),
-            hint="The API returned False/None. Confirm preconditions (project open, "
-            "timeline selected, file path valid).",
+            hint=hint or self.DEFAULT_HINT,
             exit_code=3,
         )
 

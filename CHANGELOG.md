@@ -4,6 +4,31 @@ All notable changes to this project will be documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project adheres to [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.5] - 2026-05-16
+
+### Added
+- **`CONTRIBUTING.md`** — human-friendly contributor entry point pairing
+  with `AGENTS.md` (the AI-agent rules). 60-second checklist, what we
+  welcome / push back on, security-issue reporting.
+- **`timeline marker add` error hints are now actionable.** When `AddMarker`
+  returns false, the CLI now inspects the timeline state and emits one of
+  two specific hints instead of the generic "confirm preconditions" line:
+  - timeline has zero clips → "Timeline 'X' has no clips. Resolve markers must anchor to a clip — import or append at least one clip before placing a marker. …"
+  - timeline has clips → "AddMarker returned false. Common causes: marker already exists at this frame, frame outside the timeline's clip range, or the color string is misspelled."
+- `ApiCallFailed` now accepts a `hint=` keyword argument so domain code can
+  attach situation-specific guidance without forking the error class.
+
+### Removed
+- **`test-cases.md`** at the repo root. It was internal AC↔pytest mapping
+  scaffolding that leaked into the public repo from v0.1; AC are tracked
+  in the milestone files under `versions/v*/milestones/` and the test
+  files themselves.
+
+### Tests
+- 186 (was 184). Two new tests cover the marker-add hint branches.
+
+No public API behavior changes besides the richer hints — no breaking changes.
+
 ## [0.2.4] - 2026-05-16
 
 ### Added

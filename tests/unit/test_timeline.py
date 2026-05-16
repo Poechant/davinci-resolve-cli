@@ -135,6 +135,36 @@ def test_marker_add_duplicate_raises(ready) -> None:
         tl_cmd.add_marker(ready, at="00:00:01:00", color="Red")
 
 
+def test_marker_add_duplicate_hint_mentions_collision(ready, fake_resolve) -> None:
+    from tests.conftest import FakeTimelineItem
+    from dvr.errors import ApiCallFailed
+    tl_cmd.new_timeline(ready, "Main")
+    # Make sure the timeline has at least one clip so we hit the duplicate-frame
+    # branch rather than the empty-timeline branch.
+    proj = fake_resolve.GetProjectManager().GetCurrentProject()
+    proj.GetCurrentTimeline()._add_track_item("video", 1, FakeTimelineItem("filler", 0, 48))
+    tl_cmd.add_marker(ready, at="00:00:01:00", color="Red")
+    with pytest.raises(ApiCallFailed) as exc:
+        tl_cmd.add_marker(ready, at="00:00:01:00", color="Red")
+    hint = (exc.value.hint or "").lower()
+    assert "already exists" in hint or "marker already" in hint
+
+
+def test_marker_add_on_empty_timeline_gives_clip_hint(ready, fake_resolve) -> None:
+    from dvr.errors import ApiCallFailed
+    tl_cmd.new_timeline(ready, "Empty")
+    # Force AddMarker to return False to simulate Resolve's behavior on a
+    # clipless timeline (FakeTimeline normally accepts markers regardless).
+    proj = fake_resolve.GetProjectManager().GetCurrentProject()
+    tl = proj.GetCurrentTimeline()
+    tl.AddMarker = lambda *a, **kw: False
+    with pytest.raises(ApiCallFailed) as exc:
+        tl_cmd.add_marker(ready, at="00:00:01:00", color="Blue")
+    hint = (exc.value.hint or "").lower()
+    assert "no clips" in hint
+    assert "anchor" in hint
+
+
 # ---------- marker delete ----------
 
 def test_marker_delete(ready, fake_resolve) -> None:
