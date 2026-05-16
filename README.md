@@ -218,6 +218,55 @@ Then ask the agent:
 
 The agent will call `doctor` → `render.presets` → `render.submit(start=true)` → `render.wait` automatically. Tool errors come back as structured `{errorCode, message, hint}` so the agent can branch on `resolve_not_running` / `validation_error` / etc. deterministically.
 
+## Troubleshooting
+
+<details>
+<summary><b>`dvr doctor` reports `resolve_not_running` but Resolve is open</b></summary>
+
+Make sure:
+1. A project is open inside Resolve (the splash / project picker doesn't count).
+2. Preferences → System → General → **External scripting using** is set to `Local`. The default is `None`; `Local` is required for DaVinciResolveScript to accept connections.
+3. You're on Resolve **18 or newer**. `dvr doctor` will tell you the detected version under `version`.
+</details>
+
+<details>
+<summary><b>Free vs Studio — what works on Free?</b></summary>
+
+`dvr doctor` reports your edition in the `edition` field. On Free:
+
+- ✅ All `project`, `media`, `timeline marker *` commands work
+- ⚠️ `render submit` works but some preset codecs (DNxHR, ProRes 4444, etc.) are Studio-only — the job will queue but fail at encode time
+- ❌ `dvr install-wi` deploys the plugin but **Workflow Integrations require Resolve Studio** at runtime, so `timeline cut / move` will return `wi_unavailable` on Free
+</details>
+
+<details>
+<summary><b>`pipx install` fails with `No matching distribution found for mcp>=1.0`</b></summary>
+
+Your Python is 3.9 or older. dvr 0.2.1+ requires **Python 3.10+** because the `mcp` SDK does. Check with `python --version`. If your system Python is too old, install a newer one (`pyenv install 3.12`, `brew install python@3.12`, or use Homebrew Cask).
+</details>
+
+<details>
+<summary><b>Windows: `dvr doctor` can't find `DaVinciResolveScript`</b></summary>
+
+Resolve's default install path on Windows is `%PROGRAMDATA%\Blackmagic Design\DaVinci Resolve\Support\Developer\Scripting\`. If you installed Resolve to a custom location, set these two env vars before running `dvr`:
+
+```cmd
+set RESOLVE_SCRIPT_API=<your-path>\Support\Developer\Scripting
+set RESOLVE_SCRIPT_LIB=<your-path>\fusionscript.dll
+```
+
+`dvr doctor --format json` shows the resolved `apiPath` and `libPath` — useful to confirm what we tried.
+</details>
+
+<details>
+<summary><b>I ran `dvr install-wi` but the bridge doesn't show up in Resolve's Workspace menu</b></summary>
+
+1. **Restart Resolve.** Workflow Integrations are scanned at launch.
+2. Check you're on **Resolve Studio** — WI is Studio-only.
+3. macOS: the plugin must land at `~/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Workflow Integration Plugins/dvr-cli-bridge/`. `dvr install-wi --format json` prints the destination — verify the path exists and contains `manifest.xml / index.html / server.js`.
+4. After enabling under Workspace → Workflow Integrations, a small panel should pop up showing "Polling localhost:50420…". If you don't see it, check Resolve's `console.log` (Help → Logs).
+</details>
+
 ## Development
 
 ```bash

@@ -9,6 +9,7 @@ from typing import Optional
 import typer
 
 from . import __version__
+from .commands import completion as completion_cmd
 from .commands import doctor as doctor_cmd
 from .commands import install_wi as install_wi_cmd
 from .commands import mcp_cmd
@@ -32,6 +33,7 @@ app.add_typer(render_cmd.app, name="render")
 app.add_typer(timeline_cmd.app, name="timeline")
 app.add_typer(mcp_cmd.app, name="mcp")
 app.add_typer(install_wi_cmd.app, name="install-wi")
+app.add_typer(completion_cmd.app, name="completion")
 
 
 def _version_callback(value: bool) -> None:

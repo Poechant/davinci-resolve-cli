@@ -1,0 +1,65 @@
+name: Bug report
+description: Report a defect in dvr
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: A short description of the bug.
+      placeholder: dvr render submit … returned wi_unavailable even though my plugin is loaded.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. `dvr install-wi`
+        2. Launch Resolve, enable DVR CLI Bridge under Workspace → Workflow Integrations
+        3. `dvr timeline cut --at 00:00:01:00`
+        4. → expected success, got wi_unavailable
+    validations:
+      required: true
+
+  - type: input
+    id: dvr_version
+    attributes:
+      label: dvr version
+      description: Output of `dvr --version`
+      placeholder: 0.2.8
+    validations:
+      required: true
+
+  - type: input
+    id: resolve_version
+    attributes:
+      label: DaVinci Resolve version + edition
+      placeholder: 19.1.4 Studio
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: macOS 15.3.2 Apple Silicon / Windows 11 / Ubuntu 24.04
+    validations:
+      required: true
+
+  - type: textarea
+    id: doctor
+    attributes:
+      label: dvr doctor --format json output
+      description: Paste the full output. This tells us everything we need about your bridge environment.
+      render: json
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
+      description: Logs, screenshots, terminal output, etc.

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "davinci-resolve-cli"
-version = "0.2.7"
+version = "0.2.8"
 description = "A CLI for DaVinci Resolve 18+ — project, media, render, and timeline control for humans and AI agents."
 readme = "README.md"
 requires-python = ">=3.10"

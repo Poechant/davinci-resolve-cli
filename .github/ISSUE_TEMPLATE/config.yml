@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question / discussion
+    url: https://github.com/Poechant/davinci-resolve-cli/discussions
+    about: For general questions, recipes, or sharing how you use dvr — please use Discussions, not Issues.

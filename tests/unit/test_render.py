@@ -72,6 +72,18 @@ def test_submit_unknown_preset_raises(ready, store) -> None:
         )
 
 
+def test_submit_unknown_preset_hint_suggests_close_match(ready, store) -> None:
+    """A close-but-wrong preset name should trigger the fuzzy-match hint."""
+    with pytest.raises(ValidationError) as exc:
+        render.submit_render(
+            ready, preset="H264 Master", output="/tmp/x.mp4", store=store
+        )
+    # FakeProject preloads "H.264 Master" + "ProRes 422 HQ"; fuzzy should find one.
+    assert exc.value.hint is not None
+    assert "Did you mean" in exc.value.hint
+    assert "H.264 Master" in exc.value.hint
+
+
 # ---------- status ----------
 
 def test_status_reads_live_state(ready, store, fake_resolve) -> None:

@@ -4,6 +4,36 @@ All notable changes to this project will be documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project adheres to [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.8] - 2026-05-17
+
+### Added
+- **`dvr completion install`** — friendlier wrapper around Typer's built-in
+  `--install-completion`. Auto-detects the shell from `$SHELL` (zsh / bash /
+  fish), runs the install, prints a clear "open a new shell" next-step.
+  Pass `--shell` to override detection.
+- **`dvr render submit` fuzzy preset hint** — when the preset name doesn't
+  match exactly, the error now includes up to five close-match suggestions
+  (`difflib.get_close_matches`, cutoff 0.4). e.g. `H264 Master` → hint
+  `Did you mean one of: 'H.264 Master'?`
+- **README Troubleshooting** — five expand/collapse Q&As covering the
+  most common installation and bridge pitfalls (Resolve-not-running,
+  Free vs Studio, Python 3.9 incompat, Windows custom install path,
+  WI plugin not showing in Workspace menu).
+- **GitHub issue & PR templates** under `.github/`:
+  - `ISSUE_TEMPLATE/bug_report.yml` — structured form with `dvr --version`,
+    Resolve version+edition, OS, `dvr doctor --format json` paste.
+  - `ISSUE_TEMPLATE/feature_request.yml` — problem / proposed CLI shape /
+    alternatives / scope dropdown.
+  - `ISSUE_TEMPLATE/config.yml` — blank issues disabled, directs general
+    questions to Discussions.
+  - `PULL_REQUEST_TEMPLATE.md` — TDD/schemas/MCP-mirror checklist.
+
+### Tests
+- 197 (was 186). Eleven new tests cover shell detection, the three
+  completion failure modes, and the fuzzy preset hint.
+
+No code-breaking changes.
+
 ## [0.2.7] - 2026-05-16
 
 ### Removed

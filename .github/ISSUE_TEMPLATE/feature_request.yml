@@ -1,0 +1,45 @@
+name: Feature request
+description: Suggest a new command, capability, or improvement
+title: "[feat] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the workflow you're trying to support and why the existing commands fall short.
+      placeholder: I want to export markers as a chapter file for upload to YouTube, but there's no `dvr timeline marker export` command.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Sketch the CLI surface — command name, key flags, expected JSON output shape.
+      placeholder: |
+        dvr timeline marker export --format youtube > chapters.txt
+        # Falls back to JSON if --format is omitted and stdout is not a TTY.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Hacks / workarounds you've tried, related tools, etc.
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Where does this fit?
+      options:
+        - "Extends an existing command domain (doctor / project / media / render / timeline)"
+        - "New command domain"
+        - "Workflow Integrations bridge"
+        - "MCP server"
+        - "Cross-platform / packaging"
+        - "Documentation"
+        - "Other"
+    validations:
+      required: true

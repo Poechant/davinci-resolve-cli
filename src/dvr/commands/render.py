@@ -64,10 +64,19 @@ def submit_render(
     store: Optional[JobStore] = None,
 ) -> dict[str, Any]:
     proj = _current_project_or_raise(client)
-    if preset not in (proj.GetRenderPresetList() or []):
+    presets = proj.GetRenderPresetList() or []
+    if preset not in presets:
+        # Fuzzy-match against known presets to provide an actionable hint.
+        from difflib import get_close_matches
+        close = get_close_matches(preset, presets, n=5, cutoff=0.4)
+        suggestion = (
+            f" Did you mean one of: {', '.join(repr(c) for c in close)}?"
+            if close
+            else ""
+        )
         raise ValidationError(
             f"unknown render preset: {preset}",
-            hint="Use `dvr render presets` to list available presets.",
+            hint=f"Use `dvr render presets` to list available presets.{suggestion}",
         )
     if not proj.LoadRenderPreset(preset):
         raise ApiCallFailed("LoadRenderPreset", preset)
