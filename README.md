@@ -13,11 +13,6 @@ A CLI for DaVinci Resolve 18+ — project / media / render / timeline control fo
 
 ## Demo
 
-![demo](docs/demo.gif)
-
-<details>
-<summary>What the commands above output (text snapshot)</summary>
-
 ```console
 $ dvr doctor --format json | jq '{version, edition, bridgeStatus}'
 {
@@ -45,9 +40,7 @@ $ dvr timeline marker add --at 00:00:01:00 --note "review" --color Green --forma
 $ dvr mcp   # ← then any MCP client (stdio) can call 20 tools
 ```
 
-> The GIF above is generated from `docs/demo.tape` with [vhs](https://github.com/charmbracelet/vhs) (`brew install vhs && vhs docs/demo.tape`). Re-run after major UX changes.
-
-</details>
+> An animated demo will replace this snapshot once `vhs docs/demo.tape` can be run on macOS 15 (the tape script and `docs/demo.tape` source are already in the repo).
 
 ## Install
 

@@ -4,6 +4,20 @@ All notable changes to this project will be documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project adheres to [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.6] - 2026-05-16
+
+### Fixed
+- **README Demo section** no longer references a missing `docs/demo.gif`.
+  Homebrew on macOS 15 (still pre-release) errors out installing vhs
+  (`Error: unknown or unsupported macOS version: :dunno`), so the GIF
+  can't be regenerated yet. The text snapshot now leads the section
+  unconditionally, with a brief note about the future GIF.
+- `docs/demo.tape` is unchanged — the moment vhs becomes installable
+  on macOS 15 stable, `vhs docs/demo.tape` will regenerate the GIF and
+  the README can re-embed it.
+
+Doc-only patch.
+
 ## [0.2.5] - 2026-05-16
 
 ### Added
