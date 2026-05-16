@@ -2,9 +2,7 @@
 
 Thanks for considering a contribution! This project is small, opinionated, and easy to onboard onto.
 
-If you are an **AI coding agent** (Cursor / Codex / Aider / Continue / …) being asked to help a contributor, read [`AGENTS.md`](AGENTS.md) first — it encodes the hard rules.
-
-If you are a **human contributor**, read this file. The rules in `AGENTS.md` also apply to you, but this file is the friendlier entry point.
+The rules below apply to **both human and AI contributors** — if you're using an AI coding assistant to help with a PR, point it at this file.
 
 ## Quick start
 
@@ -22,7 +20,7 @@ You can hack on most commands without DaVinci Resolve installed, thanks to the i
 
 1. **Open an issue first** for anything bigger than a typo or a one-line bug fix. Surface the use case, not just the patch — we'd rather tweak the design once than five times in review.
 2. **Branch from `main`** (`git checkout -b feat/your-thing` or `fix/your-thing`).
-3. **TDD**: failing test first, then code. See `AGENTS.md` for the full checklist; the short version is below.
+3. **TDD**: failing test first, then code. The full checklist is below.
 4. **One topic per PR.** A doc patch + a feature + a refactor in one PR makes review three times harder.
 5. **Open a PR** against `main`. CI runs the matrix on macOS / Windows / Linux × Python 3.10 / 3.11 / 3.12. Green is required.
 

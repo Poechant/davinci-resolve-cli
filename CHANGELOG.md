@@ -4,6 +4,16 @@ All notable changes to this project will be documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project adheres to [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.7] - 2026-05-16
+
+### Removed
+- **`AGENTS.md`** — turned out to be premature given the project has no real
+  contributors yet, and the rules it encoded duplicated `CONTRIBUTING.md`.
+  The contributor-facing checklist now lives in `CONTRIBUTING.md` and
+  explicitly addresses both human and AI contributors.
+
+Doc-only patch.
+
 ## [0.2.6] - 2026-05-16
 
 ### Fixed
